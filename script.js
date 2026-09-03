@@ -23,7 +23,6 @@ const lightboxClose = document.getElementById("lightboxClose");
    MENÜ
    ========================= */
 
-// Menü öffnen
 menuButton.addEventListener("click", () => {
 
     menu.classList.add("active");
@@ -33,7 +32,6 @@ menuButton.addEventListener("click", () => {
 });
 
 
-// Menü schließen
 function closeMenu() {
 
     menu.classList.remove("active");
@@ -43,11 +41,9 @@ function closeMenu() {
 }
 
 
-// X-Button
 closeButton.addEventListener("click", closeMenu);
 
 
-// Menü schließen, wenn ein Link angeklickt wird
 const menuLinks = document.querySelectorAll(".menu a");
 
 menuLinks.forEach(link => {
@@ -61,7 +57,6 @@ menuLinks.forEach(link => {
    LIGHTBOX
    ========================= */
 
-// Bild öffnen
 photos.forEach(photo => {
 
     photo.addEventListener("click", () => {
@@ -80,7 +75,6 @@ photos.forEach(photo => {
 });
 
 
-// Lightbox schließen
 function closeLightbox() {
 
     lightbox.classList.remove("active");
@@ -90,11 +84,9 @@ function closeLightbox() {
 }
 
 
-// X-Button
 lightboxClose.addEventListener("click", closeLightbox);
 
 
-// Klick auf den dunklen Hintergrund
 lightbox.addEventListener("click", (event) => {
 
     if (event.target === lightbox) {
@@ -117,7 +109,6 @@ document.addEventListener("keydown", (event) => {
     }
 
 
-    // Menü schließen
     if (menu.classList.contains("active")) {
 
         closeMenu();
@@ -125,7 +116,6 @@ document.addEventListener("keydown", (event) => {
     }
 
 
-    // Lightbox schließen
     if (lightbox.classList.contains("active")) {
 
         closeLightbox();
@@ -158,52 +148,66 @@ function arrangeGallery() {
     }
 
 
-    // Anzahl der Spalten bestimmen
-    let columns;
+    /* =========================
+       SPALTEN
+       ========================= */
 
-    if (window.innerWidth <= 700) {
-
-        columns = 2;
-
-    } else {
-
-        columns = 3;
-
-    }
+    const columns =
+        window.innerWidth <= 700 ? 2 : 3;
 
 
-    // Spalten zurücksetzen
-    photoElements.forEach(photo => {
-
-        photo.style.position = "absolute";
-        photo.style.top = "0";
-        photo.style.left = "0";
-
-    });
+    const gap =
+        window.innerWidth <= 700 ? 12 : 20;
 
 
-    // Breite des Containers
+    /* =========================
+       GALERIE-BREITE
+       ========================= */
+
     const galleryWidth = gallery.clientWidth;
 
 
-    // Abstand zwischen den Spalten
-    const gap = window.innerWidth <= 700 ? 12 : 20;
-
-
-    // Breite eines Bildes
     const columnWidth =
         (galleryWidth - gap * (columns - 1)) / columns;
 
 
-    // Aktuelle Höhe jeder Spalte
-    const columnHeights = new Array(columns).fill(0);
+    /* =========================
+       HÖHEN ZURÜCKSETZEN
+       ========================= */
+
+    const columnHeights =
+        new Array(columns).fill(0);
 
 
-    // Bilder verteilen
+    /* =========================
+       BILDER POSITIONIEREN
+       ========================= */
+
     photoElements.forEach(photo => {
 
-        // Kürzeste Spalte finden
+        const image = photo.querySelector("img");
+
+        if (!image) {
+            return;
+        }
+
+
+        /* Bildbreite setzen */
+
+        photo.style.width =
+            `${columnWidth}px`;
+
+
+        /* Position absolut */
+
+        photo.style.position =
+            "absolute";
+
+
+        /* Kürzeste Spalte suchen */
+
         let shortestColumn = 0;
+
 
         for (let i = 1; i < columns; i++) {
 
@@ -219,7 +223,8 @@ function arrangeGallery() {
         }
 
 
-        // Position berechnen
+        /* Position berechnen */
+
         const left =
             shortestColumn *
             (columnWidth + gap);
@@ -229,24 +234,33 @@ function arrangeGallery() {
             columnHeights[shortestColumn];
 
 
-        // Position setzen
-        photo.style.width = `${columnWidth}px`;
-        photo.style.left = `${left}px`;
-        photo.style.top = `${top}px`;
+        /* Position anwenden */
+
+        photo.style.left =
+            `${left}px`;
+
+        photo.style.top =
+            `${top}px`;
 
 
-        // Höhe des Bildes bestimmen
-        const photoHeight = photo.offsetHeight;
+        /* Höhe bestimmen */
+
+        const photoHeight =
+            photo.offsetHeight;
 
 
-        // Höhe der Spalte aktualisieren
+        /* Spaltenhöhe aktualisieren */
+
         columnHeights[shortestColumn] =
             top + photoHeight + gap;
 
     });
 
 
-    // Höhe der Galerie anpassen
+    /* =========================
+       GESAMTHÖHE
+       ========================= */
+
     const galleryHeight =
         Math.max(...columnHeights) - gap;
 
@@ -256,8 +270,9 @@ function arrangeGallery() {
 
 }
 
+
 /* =========================
-   GALERIE LADEN
+   GALERIE INITIALISIEREN
    ========================= */
 
 function updateGallery() {
@@ -267,7 +282,9 @@ function updateGallery() {
 }
 
 
-/* Galerie initial berechnen */
+/* =========================
+   SEITE GELADEN
+   ========================= */
 
 window.addEventListener("load", () => {
 
@@ -276,25 +293,44 @@ window.addEventListener("load", () => {
 });
 
 
-/* Jedes Bild neu berechnen,
-   sobald es geladen wurde */
+/* =========================
+   BILDER GELADEN
+   ========================= */
 
 photos.forEach(photo => {
 
-    photo.addEventListener("load", () => {
+    if (photo.complete) {
 
         updateGallery();
 
-    });
+    } else {
+
+        photo.addEventListener(
+            "load",
+            updateGallery
+        );
+
+    }
 
 });
 
 
-/* Bei Änderung der Fenstergröße
-   neu berechnen */
+/* =========================
+   FENSTERGRÖSSE
+   ========================= */
+
+let resizeTimer;
+
 
 window.addEventListener("resize", () => {
 
-    updateGallery();
+    clearTimeout(resizeTimer);
+
+
+    resizeTimer = setTimeout(() => {
+
+        updateGallery();
+
+    }, 100);
 
 });
