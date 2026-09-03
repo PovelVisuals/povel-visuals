@@ -256,22 +256,45 @@ function arrangeGallery() {
 
 }
 
-
 /* =========================
    GALERIE LADEN
    ========================= */
 
-// Warten, bis alle Bilder geladen wurden
-window.addEventListener("load", () => {
+function updateGallery() {
 
     arrangeGallery();
+
+}
+
+
+/* Galerie initial berechnen */
+
+window.addEventListener("load", () => {
+
+    updateGallery();
 
 });
 
 
-// Bei Änderung der Fenstergröße neu berechnen
+/* Jedes Bild neu berechnen,
+   sobald es geladen wurde */
+
+photos.forEach(photo => {
+
+    photo.addEventListener("load", () => {
+
+        updateGallery();
+
+    });
+
+});
+
+
+/* Bei Änderung der Fenstergröße
+   neu berechnen */
+
 window.addEventListener("resize", () => {
 
-    arrangeGallery();
+    updateGallery();
 
 });
