@@ -704,6 +704,10 @@ footer {
 
 @media (max-width: 700px) {
 
+   .donate {
+    padding: 90px 7%;
+}
+
 
     /* ---------- Navigation ---------- */
 
