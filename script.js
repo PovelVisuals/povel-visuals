@@ -3,6 +3,8 @@
    JavaScript
    ========================= */
 
+"use strict";
+
 
 /* =========================
    ELEMENTE
@@ -11,40 +13,82 @@
 const menuButton = document.getElementById("menuButton");
 const closeButton = document.getElementById("closeButton");
 const menu = document.getElementById("menu");
+const menuLinks = menu ? menu.querySelectorAll("a") : [];
 
-const photos = document.querySelectorAll(".photo img");
+const galleryGrid = document.getElementById("galleryGrid");
 
 const lightbox = document.getElementById("lightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxClose = document.getElementById("lightboxClose");
+
+/* Merkt sich, welches Element vor dem Öffnen fokussiert war,
+   damit der Fokus beim Schließen dorthin zurückspringt. */
+let lastFocusedElement = null;
 
 
 /* =========================
    MENÜ
    ========================= */
 
-menuButton.addEventListener("click", () => {
+function openMenu(trigger) {
+
+    if (!menu || !menuButton) {
+        return;
+    }
+
+    lastFocusedElement = trigger || document.activeElement;
 
     menu.classList.add("active");
-
     menuButton.setAttribute("aria-expanded", "true");
 
-});
+    menu.inert = false;
+    menu.removeAttribute("aria-hidden");
 
+    document.body.style.overflow = "hidden";
 
-function closeMenu() {
-
-    menu.classList.remove("active");
-
-    menuButton.setAttribute("aria-expanded", "false");
+    if (closeButton) {
+        closeButton.focus();
+    }
 
 }
 
 
-closeButton.addEventListener("click", closeMenu);
+function closeMenu() {
+
+    if (!menu || !menuButton) {
+        return;
+    }
+
+    menu.classList.remove("active");
+    menuButton.setAttribute("aria-expanded", "false");
+
+    menu.inert = true;
+    menu.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+
+    if (lastFocusedElement) {
+        lastFocusedElement.focus();
+    }
+
+}
 
 
-const menuLinks = document.querySelectorAll(".menu a");
+if (menuButton) {
+
+    menuButton.addEventListener("click", () => {
+        openMenu(menuButton);
+    });
+
+}
+
+
+if (closeButton) {
+
+    closeButton.addEventListener("click", closeMenu);
+
+}
+
 
 menuLinks.forEach(link => {
 
@@ -53,53 +97,169 @@ menuLinks.forEach(link => {
 });
 
 
-/* =========================
-   LIGHTBOX
-   ========================= */
+/* ---------- Fokus-Falle im Menü ---------- */
 
-photos.forEach(photo => {
+if (menu) {
 
-    photo.addEventListener("click", () => {
+    menu.addEventListener("keydown", (event) => {
 
-        lightboxImage.src = photo.src;
-        lightboxImage.alt = photo.alt;
+        if (event.key !== "Tab" || !menu.classList.contains("active")) {
+            return;
+        }
 
-        lightbox.classList.add("active");
+        const focusable = menu.querySelectorAll("a[href], button:not([disabled])");
 
-        document.body.style.overflow = "hidden";
+        if (focusable.length === 0) {
+            return;
+        }
 
-        lightboxClose.focus();
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+
+            event.preventDefault();
+            last.focus();
+
+        } else if (!event.shiftKey && document.activeElement === last) {
+
+            event.preventDefault();
+            first.focus();
+
+        }
 
     });
-
-});
-
-
-function closeLightbox() {
-
-    lightbox.classList.remove("active");
-
-    document.body.style.overflow = "";
 
 }
 
 
-lightboxClose.addEventListener("click", closeLightbox);
+/* =========================
+   LIGHTBOX
+   ========================= */
 
+function openLightbox(photo, trigger) {
 
-lightbox.addEventListener("click", (event) => {
-
-    if (event.target === lightbox) {
-
-        closeLightbox();
-
+    if (!lightbox || !lightboxImage) {
+        return;
     }
 
-});
+    const image = photo.querySelector("img");
+
+    if (!image) {
+        return;
+    }
+
+    lastFocusedElement = trigger || document.activeElement;
+
+    lightboxImage.src = image.src;
+    lightboxImage.alt = image.alt;
+
+    lightbox.classList.add("active");
+    lightbox.inert = false;
+    lightbox.removeAttribute("aria-hidden");
+
+    document.body.style.overflow = "hidden";
+
+    if (lightboxClose) {
+        lightboxClose.focus();
+    }
+
+}
+
+
+function closeLightbox() {
+
+    if (!lightbox) {
+        return;
+    }
+
+    lightbox.classList.remove("active");
+    lightbox.inert = true;
+    lightbox.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+
+    if (lastFocusedElement) {
+        lastFocusedElement.focus();
+    }
+
+}
+
+
+if (galleryGrid) {
+
+    /* Bilder per Tastatur erreichbar und für Screenreader beschreiben */
+
+    galleryGrid.querySelectorAll(".photo").forEach((photo, index) => {
+
+        if (!photo.hasAttribute("tabindex")) {
+            photo.setAttribute("tabindex", "0");
+        }
+
+        if (!photo.hasAttribute("role")) {
+            photo.setAttribute("role", "button");
+        }
+
+        if (!photo.hasAttribute("aria-label")) {
+            photo.setAttribute("aria-label", `Foto ${index + 1} vergrößern`);
+        }
+
+    });
+
+
+    /* Ein Listener für alle Fotos (Event-Delegation) */
+
+    galleryGrid.addEventListener("click", (event) => {
+
+        const photo = event.target.closest(".photo");
+
+        if (photo) {
+            openLightbox(photo, photo);
+        }
+
+    });
+
+
+    galleryGrid.addEventListener("keydown", (event) => {
+
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        const photo = event.target.closest(".photo");
+
+        if (photo) {
+            event.preventDefault();
+            openLightbox(photo, photo);
+        }
+
+    });
+
+}
+
+
+if (lightboxClose) {
+
+    lightboxClose.addEventListener("click", closeLightbox);
+
+}
+
+
+if (lightbox) {
+
+    lightbox.addEventListener("click", (event) => {
+
+        if (event.target === lightbox) {
+            closeLightbox();
+        }
+
+    });
+
+}
 
 
 /* =========================
-   TASTATUR-STEUERUNG
+   TASTATUR-STEUERUNG (ESC)
    ========================= */
 
 document.addEventListener("keydown", (event) => {
@@ -108,229 +268,13 @@ document.addEventListener("keydown", (event) => {
         return;
     }
 
-
-    if (menu.classList.contains("active")) {
-
-        closeMenu();
-
-    }
-
-
-    if (lightbox.classList.contains("active")) {
-
+    if (lightbox && lightbox.classList.contains("active")) {
         closeLightbox();
-
-    }
-
-});
-
-
-/* =========================
-   MASONRY GALERIE
-   ========================= */
-
-function arrangeGallery() {
-
-    const gallery = document.getElementById("galleryGrid");
-
-    if (!gallery) {
         return;
     }
 
-
-    const photoElements = Array.from(
-        gallery.querySelectorAll(".photo")
-    );
-
-
-    if (photoElements.length === 0) {
-        return;
+    if (menu && menu.classList.contains("active")) {
+        closeMenu();
     }
-
-
-    /* =========================
-       SPALTEN
-       ========================= */
-
-    const columns =
-        window.innerWidth <= 700 ? 2 : 3;
-
-
-    const gap =
-        window.innerWidth <= 700 ? 12 : 20;
-
-
-    /* =========================
-       GALERIE-BREITE
-       ========================= */
-
-    const galleryWidth = gallery.clientWidth;
-
-
-    const columnWidth =
-        (galleryWidth - gap * (columns - 1)) / columns;
-
-
-    /* =========================
-       HÖHEN ZURÜCKSETZEN
-       ========================= */
-
-    const columnHeights =
-        new Array(columns).fill(0);
-
-
-    /* =========================
-       BILDER POSITIONIEREN
-       ========================= */
-
-    photoElements.forEach(photo => {
-
-        const image = photo.querySelector("img");
-
-        if (!image) {
-            return;
-        }
-
-
-        /* Bildbreite setzen */
-
-        photo.style.width =
-            `${columnWidth}px`;
-
-
-        /* Position absolut */
-
-        photo.style.position =
-            "absolute";
-
-
-        /* Kürzeste Spalte suchen */
-
-        let shortestColumn = 0;
-
-
-        for (let i = 1; i < columns; i++) {
-
-            if (
-                columnHeights[i] <
-                columnHeights[shortestColumn]
-            ) {
-
-                shortestColumn = i;
-
-            }
-
-        }
-
-
-        /* Position berechnen */
-
-        const left =
-            shortestColumn *
-            (columnWidth + gap);
-
-
-        const top =
-            columnHeights[shortestColumn];
-
-
-        /* Position anwenden */
-
-        photo.style.left =
-            `${left}px`;
-
-        photo.style.top =
-            `${top}px`;
-
-
-        /* Höhe bestimmen */
-
-        const photoHeight =
-            photo.offsetHeight;
-
-
-        /* Spaltenhöhe aktualisieren */
-
-        columnHeights[shortestColumn] =
-            top + photoHeight + gap;
-
-    });
-
-
-    /* =========================
-       GESAMTHÖHE
-       ========================= */
-
-    const galleryHeight =
-        Math.max(...columnHeights) - gap;
-
-
-    gallery.style.height =
-        `${Math.max(galleryHeight, 0)}px`;
-
-}
-
-
-/* =========================
-   GALERIE INITIALISIEREN
-   ========================= */
-
-function updateGallery() {
-
-    arrangeGallery();
-
-}
-
-
-/* =========================
-   SEITE GELADEN
-   ========================= */
-
-window.addEventListener("load", () => {
-
-    updateGallery();
-
-});
-
-
-/* =========================
-   BILDER GELADEN
-   ========================= */
-
-photos.forEach(photo => {
-
-    if (photo.complete) {
-
-        updateGallery();
-
-    } else {
-
-        photo.addEventListener(
-            "load",
-            updateGallery
-        );
-
-    }
-
-});
-
-
-/* =========================
-   FENSTERGRÖSSE
-   ========================= */
-
-let resizeTimer;
-
-
-window.addEventListener("resize", () => {
-
-    clearTimeout(resizeTimer);
-
-
-    resizeTimer = setTimeout(() => {
-
-        updateGallery();
-
-    }, 100);
 
 });
