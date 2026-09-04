@@ -641,6 +641,43 @@ button {
 }
 
 
+
+/* ---------- Spenden ---------- */
+
+.donate {
+    padding: 130px 10%;
+
+    border-top: 1px solid #252a30;
+
+    display: flex;
+    align-items: center;
+}
+
+.donate-content {
+    max-width: 600px;
+}
+
+.donate h2 {
+    font-size: clamp(40px, 6vw, 75px);
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 30px;
+}
+
+.donate p:not(.eyebrow) {
+    color: #adb4bb;
+
+    line-height: 1.8;
+
+    max-width: 500px;
+}
+
+
 /* =========================
    FOOTER
    ========================= */
