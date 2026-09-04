@@ -5,12 +5,25 @@
 
 
 /* =========================
-   SCHRIFT
+   FARBVARIABLEN
    ========================= */
 
-@import url(
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap'
-);
+:root {
+    --color-bg: #0b0d10;
+    --color-bg-alt: #111419;
+    --color-bg-photo: #11151a;
+
+    --color-text: #f1f3f5;
+    --color-text-muted: #adb4bb;
+    --color-text-muted-2: #b8bec5;
+    --color-text-dim: #737b84;
+
+    --color-accent: #8da8c5;
+
+    --color-border: #282d33;
+    --color-border-strong: #252a30;
+    --color-border-light: rgba(255, 255, 255, 0.4);
+}
 
 
 /* =========================
@@ -32,8 +45,8 @@ html {
 body {
     font-family: 'Inter', sans-serif;
 
-    background: #0b0d10;
-    color: #f1f3f5;
+    background: var(--color-bg);
+    color: var(--color-text);
 
     overflow-x: hidden;
 }
@@ -47,6 +60,36 @@ a {
 
 button {
     font-family: inherit;
+}
+
+
+/* ---------- Barrierefreier Fokus ---------- */
+
+a:focus-visible,
+button:focus-visible,
+.photo:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+
+/* ---------- Reduzierte Bewegung respektieren ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
 }
 
 
@@ -97,7 +140,7 @@ button {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--color-border-light);
 
     font-size: 21px;
     font-weight: 500;
@@ -121,7 +164,7 @@ button {
     font-size: 8px;
     letter-spacing: 5px;
 
-    color: #8da8c5;
+    color: var(--color-accent);
 }
 
 
@@ -150,7 +193,40 @@ button {
 .menu-button:hover {
     background: rgba(100, 130, 160, 0.2);
 
-    border-color: #8da8c5;
+    border-color: var(--color-accent);
+}
+
+
+/* =========================
+   NOSCRIPT-NAVIGATION
+   ========================= */
+
+.noscript-nav {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    padding: 16px 20px;
+
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+
+    z-index: 1500;
+
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+
+.noscript-nav a:hover {
+    color: var(--color-accent);
 }
 
 
@@ -199,7 +275,7 @@ button {
 
 
 .menu a:hover {
-    color: #8da8c5;
+    color: var(--color-accent);
 
     padding-left: 15px;
 }
@@ -269,7 +345,7 @@ button {
 
     background: linear-gradient(
         transparent,
-        #0b0d10
+        var(--color-bg)
     );
 
     z-index: -1;
@@ -294,7 +370,7 @@ button {
 
     letter-spacing: 4px;
 
-    color: #8da8c5;
+    color: var(--color-accent);
 }
 
 
@@ -312,7 +388,7 @@ button {
 
 
 .hero h1 span {
-    color: #8da8c5;
+    color: var(--color-accent);
 }
 
 
@@ -323,7 +399,7 @@ button {
 
     margin-top: 30px;
 
-    color: #b8bec5;
+    color: var(--color-text-muted-2);
 
     font-size: 15px;
 
@@ -342,7 +418,7 @@ button {
 
     padding: 16px 24px;
 
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--color-border-light);
 
     font-size: 11px;
 
@@ -356,9 +432,9 @@ button {
 
 
 .button:hover {
-    background: #f1f3f5;
+    background: var(--color-text);
 
-    color: #0b0d10;
+    color: var(--color-bg);
 
     border-color: white;
 }
@@ -387,25 +463,27 @@ button {
 }
 
 
-/* ---------- Masonry Container ---------- */
+/* ---------- Masonry per CSS-Spalten ----------
+   Kein JavaScript nötig: funktioniert sofort, ohne
+   Layout-Sprünge und unabhängig vom Ladezeitpunkt der Bilder. */
 
 .gallery {
-    position: relative;
-
-    width: 100%;
+    column-count: 3;
+    column-gap: 20px;
 }
 
 
-/* ---------- Einzelnes Bild ---------- */
-
 .photo {
-    position: absolute;
-
     overflow: hidden;
 
-    background: #11151a;
+    background: var(--color-bg-photo);
 
     cursor: pointer;
+
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+
+    margin-bottom: 20px;
 }
 
 
@@ -423,9 +501,10 @@ button {
 }
 
 
-/* ---------- Hover Zoom ---------- */
+/* ---------- Hover / Tastatur-Fokus Zoom ---------- */
 
-.photo:hover img {
+.photo:hover img,
+.photo:focus-visible img {
     transform: scale(1.06);
 
     filter: brightness(0.78);
@@ -521,9 +600,9 @@ button {
 .lightbox-close:hover {
     background: rgba(255, 255, 255, 0.12);
 
-    border-color: #8da8c5;
+    border-color: var(--color-accent);
 
-    color: #8da8c5;
+    color: var(--color-accent);
 }
 
 
@@ -542,7 +621,7 @@ button {
     background:
         linear-gradient(
             90deg,
-            #0b0d10 0%,
+            var(--color-bg) 0%,
             rgba(11, 13, 16, 0.75) 60%,
             rgba(11, 13, 16, 0.2)
         ),
@@ -573,7 +652,7 @@ button {
 .about p:not(.eyebrow) {
     max-width: 450px;
 
-    color: #adb4bb;
+    color: var(--color-text-muted);
 
     line-height: 1.8;
 }
@@ -608,13 +687,14 @@ button {
 
     padding: 18px;
 
-    border: 1px solid #282d33;
+    border: 1px solid var(--color-border);
 
-    background: #111419;
+    background: var(--color-bg-alt);
 
     color: white;
 
     font-family: inherit;
+    font-size: 15px;
 
     outline: none;
 
@@ -624,13 +704,13 @@ button {
 
 .contact input::placeholder,
 .contact textarea::placeholder {
-    color: #737b84;
+    color: var(--color-text-dim);
 }
 
 
 .contact input:focus,
 .contact textarea:focus {
-    border-color: #8da8c5;
+    border-color: var(--color-accent);
 }
 
 
@@ -641,21 +721,22 @@ button {
 }
 
 
-
 /* ---------- Spenden ---------- */
 
 .donate {
     padding: 130px 10%;
 
-    border-top: 1px solid #252a30;
+    border-top: 1px solid var(--color-border-strong);
 
     display: flex;
     align-items: center;
 }
 
+
 .donate-content {
     max-width: 600px;
 }
+
 
 .donate h2 {
     font-size: clamp(40px, 6vw, 75px);
@@ -669,8 +750,9 @@ button {
     margin-bottom: 30px;
 }
 
+
 .donate p:not(.eyebrow) {
-    color: #adb4bb;
+    color: var(--color-text-muted);
 
     line-height: 1.8;
 
@@ -688,9 +770,9 @@ footer {
     display: flex;
     justify-content: space-between;
 
-    border-top: 1px solid #252a30;
+    border-top: 1px solid var(--color-border-strong);
 
-    color: #737b84;
+    color: var(--color-text-dim);
 
     font-size: 11px;
 
@@ -704,9 +786,9 @@ footer {
 
 @media (max-width: 700px) {
 
-   .donate {
-    padding: 90px 7%;
-}
+    .donate {
+        padding: 90px 7%;
+    }
 
 
     /* ---------- Navigation ---------- */
@@ -783,6 +865,17 @@ footer {
 
     .gallery-section {
         padding: 90px 5%;
+    }
+
+
+    .gallery {
+        column-count: 2;
+        column-gap: 12px;
+    }
+
+
+    .photo {
+        margin-bottom: 12px;
     }
 
 
