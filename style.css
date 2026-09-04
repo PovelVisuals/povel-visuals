@@ -1,0 +1,949 @@
+/* =========================
+   POVEL VISUALS
+   Main Stylesheet
+   ========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+
+/* ---------- Grundlegendes ---------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #0b0d10;
+    color: #f1f3f5;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* ---------- Navigation ---------- */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 90px;
+
+    padding: 0 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 1000;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(5, 7, 9, 0.75),
+        transparent
+    );
+}
+
+
+/* ---------- Logo ---------- */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.logo > span {
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -2px;
+
+    border: 1px solid rgba(255,255,255,0.5);
+
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo strong {
+    display: block;
+
+    font-size: 16px;
+    letter-spacing: 5px;
+}
+
+.logo small {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 8px;
+    letter-spacing: 5px;
+
+    color: #8da8c5;
+}
+
+
+/* ---------- Menü-Button ---------- */
+
+.menu-button {
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    background: rgba(10, 12, 15, 0.35);
+
+    color: white;
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.menu-button:hover {
+    background: rgba(100,130,160,0.2);
+    border-color: #8da8c5;
+}
+
+
+/* ---------- Fullscreen Menü ---------- */
+
+.menu {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(8, 10, 13, 0.97);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding-left: 12%;
+
+    z-index: 2000;
+
+    transform: translateX(-100%);
+
+    transition: transform 0.5s ease;
+}
+
+.menu.active {
+    transform: translateX(0);
+}
+
+.menu a {
+    font-size: clamp(35px, 6vw, 80px);
+
+    font-weight: 300;
+
+    letter-spacing: 3px;
+
+    margin: 12px 0;
+
+    transition:
+        color 0.3s ease,
+        padding-left 0.3s ease;
+}
+
+.menu a:hover {
+    color: #8da8c5;
+
+    padding-left: 15px;
+}
+
+
+/* ---------- Menü schließen ---------- */
+
+.close-button {
+    position: absolute;
+
+    top: 30px;
+    right: 45px;
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 45px;
+
+    font-weight: 200;
+
+    cursor: pointer;
+}
+
+
+/* ---------- Fallback Navigation ---------- */
+
+.noscript-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding: 20px;
+
+    background: #0b0d10;
+
+    z-index: 5000;
+
+    display: flex;
+    gap: 20px;
+}
+
+
+/* ---------- Hero ---------- */
+
+.hero {
+    min-height: 100vh;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(5, 7, 10, 0.92) 0%,
+            rgba(5, 7, 10, 0.55) 45%,
+            rgba(5, 7, 10, 0.15) 100%
+        ),
+        url("images/foto1.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    isolation: isolate;
+}
+
+
+/* ---------- Dunkler Verlauf unten ---------- */
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    inset: auto 0 0 0;
+
+    height: 35%;
+
+    background: linear-gradient(
+        transparent,
+        #0b0d10
+    );
+
+    z-index: -1;
+}
+
+
+.hero-content {
+    max-width: 650px;
+
+    margin-left: 9%;
+
+    padding-top: 60px;
+}
+
+
+/* ---------- Kleine Überschrift ---------- */
+
+.eyebrow {
+    font-size: 11px;
+
+    letter-spacing: 4px;
+
+    color: #8da8c5;
+
+    margin-bottom: 25px;
+}
+
+
+.hero h1 {
+    font-size: clamp(55px, 8vw, 115px);
+
+    line-height: 0.9;
+
+    font-weight: 300;
+
+    letter-spacing: -4px;
+}
+
+.hero h1 span {
+    color: #8da8c5;
+}
+
+
+.hero-text {
+    max-width: 400px;
+
+    margin-top: 30px;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+
+    color: #b8bec5;
+}
+
+
+/* ---------- Buttons ---------- */
+
+.button {
+    display: inline-block;
+
+    margin-top: 35px;
+
+    padding: 16px 24px;
+
+    border: 1px solid rgba(255,255,255,0.4);
+
+    background: transparent;
+
+    color: inherit;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.button:hover {
+    background: #f1f3f5;
+
+    color: #0b0d10;
+
+    border-color: white;
+}
+
+
+/* ---------- Galerie ---------- */
+
+.gallery-section {
+    padding: 130px 7%;
+}
+
+.section-heading {
+    margin-bottom: 60px;
+}
+
+.section-heading h2 {
+    font-size: clamp(40px, 6vw, 75px);
+
+    font-weight: 300;
+
+    letter-spacing: -2px;
+}
+
+
+/* ---------- Masonry Galerie ---------- */
+
+.gallery {
+    position: relative;
+
+    width: 100%;
+
+    column-count: 3;
+    column-gap: 20px;
+}
+
+
+/*
+ * Die Galerie wird per JavaScript positioniert.
+ * Deshalb wird die Höhe automatisch gesetzt.
+ */
+
+.photo {
+    break-inside: avoid;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    background: #11151a;
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+}
+
+
+.photo img {
+    width: 100%;
+
+    height: auto;
+
+    display: block;
+
+    transition:
+        transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+        filter 0.7s ease;
+}
+
+
+/* ---------- Zoom beim Darüberfahren ---------- */
+
+.photo:hover img {
+    transform: scale(1.06);
+
+    filter: brightness(0.78);
+}
+
+
+/* ---------- Tastatur-Fokus Galerie ---------- */
+
+.photo:focus-visible {
+    outline: 2px solid #8da8c5;
+
+    outline-offset: 4px;
+}
+
+
+/* ---------- Vollbild-Galerie ---------- */
+
+.lightbox {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(5, 7, 10, 0.96);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px;
+
+    z-index: 3000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+}
+
+.lightbox.active {
+    opacity: 1;
+
+    visibility: visible;
+}
+
+.lightbox img {
+    max-width: 92vw;
+
+    max-height: 90vh;
+
+    width: auto;
+
+    height: auto;
+
+    object-fit: contain;
+
+    transform: scale(0.94);
+
+    transition: transform 0.4s ease;
+}
+
+.lightbox.active img {
+    transform: scale(1);
+}
+
+
+/* ---------- Lightbox schließen ---------- */
+
+.lightbox-close {
+    position: absolute;
+
+    top: 25px;
+    right: 35px;
+
+    width: 50px;
+    height: 50px;
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    background: rgba(10,12,15,0.5);
+
+    color: white;
+
+    font-size: 32px;
+
+    font-weight: 200;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    z-index: 2;
+}
+
+.lightbox-close:hover {
+    background: rgba(255,255,255,0.12);
+
+    border-color: #8da8c5;
+
+    color: #8da8c5;
+}
+
+
+/* ---------- Über mich / Kontakt / Spenden ---------- */
+
+
+/*
+ * Gemeinsame Grundlage für die drei Bereiche.
+ *
+ * Das eigentliche Bild wird von JavaScript über
+ * --section-background gesetzt.
+ */
+
+.about,
+.contact,
+.donate {
+    position: relative;
+
+    isolation: isolate;
+
+    background-color: #0b0d10;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(11,13,16,0.94) 0%,
+            rgba(11,13,16,0.78) 45%,
+            rgba(11,13,16,0.48) 100%
+        ),
+        var(--section-background, none);
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+}
+
+
+/* ---------- Über mich ---------- */
+
+.about {
+    min-height: 75vh;
+
+    padding: 120px 10%;
+
+    display: flex;
+
+    align-items: center;
+}
+
+.about-content {
+    max-width: 550px;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+.about h2 {
+    font-size: clamp(40px, 6vw, 75px);
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    margin-bottom: 30px;
+}
+
+.about p:not(.eyebrow) {
+    color: #adb4bb;
+
+    line-height: 1.8;
+
+    max-width: 450px;
+}
+
+
+/* ---------- Kontakt ---------- */
+
+.contact {
+    min-height: 75vh;
+
+    padding: 130px 10%;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 100px;
+
+    align-items: center;
+}
+
+.contact .section-heading,
+.contact form {
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.contact form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.contact input,
+.contact textarea {
+    width: 100%;
+
+    padding: 18px;
+
+    background: rgba(17,20,25,0.88);
+
+    border: 1px solid #282d33;
+
+    color: white;
+
+    font-family: inherit;
+
+    outline: none;
+
+    transition: 0.3s;
+}
+
+.contact input::placeholder,
+.contact textarea::placeholder {
+    color: #737b84;
+}
+
+.contact input:focus,
+.contact textarea:focus {
+    border-color: #8da8c5;
+}
+
+.contact textarea {
+    min-height: 170px;
+
+    resize: vertical;
+}
+
+
+/* ---------- Spenden ---------- */
+
+.donate {
+    min-height: 75vh;
+
+    padding: 120px 10%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    text-align: left;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0b0d10 0%,
+            rgba(11,13,16,0.75) 60%,
+            rgba(11,13,16,0.2)
+        ),
+        url("images/foto15.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.donate > div {
+    max-width: 550px;
+    margin: 0;
+}
+
+.donate h2 {
+    font-size: clamp(40px, 6vw, 75px);
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    margin-bottom: 30px;
+}
+
+.donate p:not(.eyebrow) {
+    color: #adb4bb;
+
+    line-height: 1.8;
+
+    max-width: 450px;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    border-top: 1px solid #252a30;
+
+    padding: 40px 7%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #737b84;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 0 20px;
+    }
+
+
+    .hero-content {
+        margin-left: 7%;
+
+        margin-right: 7%;
+    }
+
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+
+    .gallery-section {
+        padding: 90px 5%;
+    }
+
+
+    .gallery {
+        column-count: 2;
+
+        column-gap: 12px;
+    }
+
+
+    .contact {
+        grid-template-columns: 1fr;
+
+        gap: 50px;
+
+        padding: 90px 7%;
+    }
+
+
+    .about {
+        padding: 90px 7%;
+    }
+
+
+    .donate {
+        padding: 90px 7%;
+    }
+
+
+    footer {
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .menu {
+        padding-left: 8%;
+    }
+
+
+    .close-button {
+        right: 20px;
+    }
+
+
+    .lightbox {
+        padding: 20px;
+    }
+
+
+    .lightbox-close {
+        top: 20px;
+
+        right: 20px;
+    }
+
+}
+
+
+/* ---------- Kleine Smartphones ---------- */
+
+@media (max-width: 450px) {
+
+    .logo strong {
+        font-size: 14px;
+
+        letter-spacing: 4px;
+    }
+
+
+    .logo small {
+        font-size: 7px;
+
+        letter-spacing: 4px;
+    }
+
+
+    .logo > span {
+        width: 40px;
+
+        height: 40px;
+    }
+
+
+    .menu-button {
+        width: 44px;
+
+        height: 44px;
+    }
+
+
+    .gallery {
+        column-gap: 10px;
+    }
+
+}
+
+/* =========================
+   SHOP
+   ========================= */
+
+.shop {
+    min-height: 75vh;
+
+    padding: 120px 10%;
+
+    display: flex;
+    align-items: center;
+
+    position: relative;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0b0d10 0%,
+            rgba(11, 13, 16, 0.82) 45%,
+            rgba(11, 13, 16, 0.35) 100%
+        ),
+        url("images/foto15.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    isolation: isolate;
+}
+
+
+/* Inhalt */
+
+.shop-content {
+    max-width: 550px;
+}
+
+
+/* Überschrift */
+
+.shop h2 {
+    font-size: clamp(40px, 6vw, 75px);
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 30px;
+}
+
+
+/* Beschreibung */
+
+.shop-text {
+    color: #adb4bb;
+
+    line-height: 1.8;
+
+    max-width: 450px;
+
+    font-size: 15px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .shop {
+        min-height: 80vh;
+
+        padding: 90px 7%;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(11, 13, 16, 0.92),
+                rgba(11, 13, 16, 0.55)
+            ),
+            url("images/foto15.jpg");
+
+        background-size: cover;
+        background-position: center;
+    }
+
+    .shop h2 {
+        letter-spacing: -1px;
+    }
+
+}
